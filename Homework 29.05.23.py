@@ -84,7 +84,7 @@ kwota_poczatkowa_kredytu = float(input('Podaj kwote poczatkowa kredytu: '))
 stala_wartosc_raty = float(input('Podaj stala wartosc raty: '))
 print(f'oprocentowanie kredytu to: {oprocentowanie_kredytu}, kwota poczatkowa kredytu to: {kwota_poczatkowa_kredytu}, stala wartosc raty to: {stala_wartosc_raty}')
 formula_do_pierwszego_obliczenia = (1 + ((inflacja_1+oprocentowanie_kredytu)/1200)) * kwota_poczatkowa_kredytu - stala_wartosc_raty
-
+print(formula_do_pierwszego_obliczenia)
 '''
 tabela_inflacji_wartosci
 oprocentowanie_kredytu
