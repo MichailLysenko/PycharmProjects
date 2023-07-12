@@ -79,9 +79,9 @@ inflacja_23 = -0.4041867176	#8233,565935
 #Grudzień
 inflacja_24 = 1.499708521	#8064,439807
 
-oprocentowanie_kredytu = input('Podaj oprocentowanie kredytu: ')
-kwota_poczatkowa_kredytu = input('Podaj kwote poczatkowa kredytu: ')
-stala_wartosc_raty = input('Podaj stala wartosc raty: ')
+oprocentowanie_kredytu = float(input('Podaj oprocentowanie kredytu: '))
+kwota_poczatkowa_kredytu = float(input('Podaj kwote poczatkowa kredytu: '))
+stala_wartosc_raty = float(input('Podaj stala wartosc raty: '))
 print(f'oprocentowanie kredytu to: {oprocentowanie_kredytu}, kwota poczatkowa kredytu to: {kwota_poczatkowa_kredytu}, stala wartosc raty to: {stala_wartosc_raty}')
 formula_do_pierwszego_obliczenia = (1 + ((inflacja_1+oprocentowanie_kredytu)/1200)) * kwota_poczatkowa_kredytu - stala_wartosc_raty
 
