@@ -73,9 +73,9 @@ magazyn_1 = {
     'cena' : 1500
     },
 }
-
+history = []
 initial_message = 'Witaj w Twoim magazynie. Lista dostepnych komend to:\n'\
-                  ' 1.Saldo\n 2.Sprzedaz\n 3.Zakup\n 4.Konto\n 5.Lista\n 6.Magazyn\n 7.Przeglad\n 8.Koniec'
+                  ' 1. Saldo\n 2. Sprzedaz\n 3. Zakup\n 4. Konto\n 5. Lista\n 6. Magazyn\n 7. Przeglad\n 8. Koniec'
 
 end_program = False
 while not end_program:
@@ -84,4 +84,36 @@ while not end_program:
 
 #TODO: Przerobic ponizszy if na match_case
 
-if operation ==
+if operation == '1':
+    amount = float(input('Podaj kwote, ktora chcesz dodac lub ujac z konta'))
+    saldo += amount
+    #Jezeli chcemy odjac, to dajemy kwote ujemna
+    #TODO poprosic jeszcze o rodzaj operacji: czy dodajemy, czy odejmujemy
+    history.append(f'Wykonano instrukcje saldo, zasilono {amount}')
+if operation == '2':
+    print(magazyn)
+    product = input('Podaj nazwe produktu: ')
+    #TODO zmienic na float, bo np kg.
+    amount = int(input('Podaj ilosc produktow: '))
+    #Najpierw sprawdzmy, czy mamy towar
+    product_found = False
+    print(magazyn)
+    print(saldo)
+    for item, item_details in magazyn.items(): #Bez items biliby tylko kluczy.
+        if product == item:
+            item_details['ilosc'] -= amount
+            saldo += (item_details['cena'] * amount)
+            product_found = True
+            history.append(f'Sprzedano {pdoduct} w ilosci {amount}')
+            break
+    if not product_found:
+        history.append(f'Nie udalo sie sprzedac towaru {product}, mamy go za malo na magazynie')
+        pass
+if operation == '7':
+    #TODO jak value bedzie wieksze od naszej listy to wyprintowac dlugosc listy instrukcja len()
+    value_from = input('Podaj poczatkowy zakres: ')
+    value_to = input('Podaj koncowy zakres: ')
+    if not value_to and not value_from:
+        print(history)
+    if value_from and not value_to:
+        print(history[value_from:])
