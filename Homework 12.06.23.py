@@ -52,6 +52,37 @@ for key, student in students_dict.items():
         students_dict[key] = 'Teraz dziala'
 # U mnie nie dziala
 '''
+#Saldo - program pobiera kwote do dodania lub odjecia z konta
+
+# + dodajemy wpis do historii!
+#Sprzedaz - program pobiera nazwe produktu, cene oraz liczbe sztuk.
+    #produkt musi znajdowac sie na magazynie
+    #Po wykonaniu operacji: 1) usunac produkt z magazynu, 2) dodac kwote do salda
+  #W momencie, kiedy operacja sie nie powiedzie, i tak wpisujemy do historii,
+  #Ale z informacja, ze operacja sie nie udala.
+#Zakup - program pobiera nazwe produktu, cene oraz liczbe sztuk.
+    #produkt zostaje dodany do magazynu, jesli go nie bylo
+    #Obliczenia są wykonane odwrotnie do komendy "sprzedaz".
+    #Saldo konta po zakończeniu operacji „zakup” nie może być ujemne.
+    # - Dodac produkt do magazynu
+        #jesli prod, jest - dodac ilosc, jesli nie - dodac nowy produkt)
+    # - Zmniejszyc stan konta
+#Konto - program wyswietla stan konta
+#Lista - program wyswietla zalkowity stan magazynu wraz z cenami produktow i ich iloscia
+    #print
+#Magazyn - Program wyświetla stan magazynu dla konkretnego produktu. Należy podać jego nazwę.
+    #dane wejsciowe - nazwa, wyszukiwac po nazwie
+#Przeglad -  Program pobiera dwie zmienne „od” i „do”,
+    #na ich podstawie wyświetla wszystkie wprowadzone akcje
+    #zapisane pod indeksami od „od” do „do”.
+    #Jeżeli użytkownik podał pustą wartość „od” lub „do”,
+    #program powinien wypisać przegląd od początku lub/i do końca.
+    #Jeżeli użytkownik podał zmienne spoza zakresu, program powinien o tym poinformować
+    #i wyświetlić liczbę zapisanych komend (żeby pozwolić użytkownikowi wybrać odpowiedni zakres).
+
+    #Jezeli chce sie wiecej operacji, niz sa dostepne, to podajemy blad i nazwy operacji do dyspozycji
+    #W przyciwnym wypadku printujemy historie (liste)
+#Koniec - Aplikacja konczy dzialanie
 
 #Magazyn to jest lista slownikow
 #Magazyn_1 to jest slownik z klucza (nazwa) slownikow
