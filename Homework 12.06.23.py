@@ -72,6 +72,7 @@ for key, student in students_dict.items():
     #print
 #Magazyn - Program wyświetla stan magazynu dla konkretnego produktu. Należy podać jego nazwę.
     #dane wejsciowe - nazwa, wyszukiwac po nazwie
+#TODO zrobic For, porownac, czy mamy produkt.
 #Przeglad -  Program pobiera dwie zmienne „od” i „do”,
     #na ich podstawie wyświetla wszystkie wprowadzone akcje
     #zapisane pod indeksami od „od” do „do”.
@@ -82,26 +83,20 @@ for key, student in students_dict.items():
 
     #Jezeli chce sie wiecej operacji, niz sa dostepne, to podajemy blad i nazwy operacji do dyspozycji
     #W przyciwnym wypadku printujemy historie (liste)
+    #TODO zrobic walidacje, jezeli value jest wieksze od naszej listy. Wyprintowac dlugosc listy (len)
 #Koniec - Aplikacja konczy dzialanie
 
 #Magazyn to jest lista slownikow
 #Magazyn_1 to jest slownik z klucza (nazwa) slownikow
 saldo = 8000.0
-magazyn = [
-    {
-    'nazwa' : 'rower',
-    'ilosc' : 2,
-    'cena_jednostkowa' : 100
+magazyn = {
+    'rower': {
+        'ilosc' : 2,
+        'cena' : 100
     },
-]
-magazyn_1 = {
-    'rower':{
-    'ilosc' : 2,
-    'cena' : 100
-    },
-    'lodka':{
-    'ilosc': 3,
-    'cena' : 1500
+    'lodka': {
+        'ilosc': 3,
+        'cena' : 1500
     },
 }
 history = []
@@ -110,41 +105,39 @@ initial_message = 'Witaj w Twoim magazynie. Lista dostepnych komend to:\n'\
 
 end_program = False
 while not end_program:
-    print(initial_message)
-    operation = input('Podaj operacje ktora chcesz wykonac: ')
-
-#TODO: Przerobic ponizszy if na match_case
-
-if operation == '1':
-    amount = float(input('Podaj kwote, ktora chcesz dodac lub ujac z konta'))
-    saldo += amount
-    #Jezeli chcemy odjac, to dajemy kwote ujemna
-    #TODO poprosic jeszcze o rodzaj operacji: czy dodajemy, czy odejmujemy
-    history.append(f'Wykonano instrukcje saldo, zasilono {amount}')
-if operation == '2':
-    print(magazyn)
-    product = input('Podaj nazwe produktu: ')
-    #TODO zmienic na float, bo np kg.
-    amount = int(input('Podaj ilosc produktow: '))
-    #Najpierw sprawdzmy, czy mamy towar
-    product_found = False
     print(magazyn)
     print(saldo)
-    for item, item_details in magazyn.items(): #Bez items biliby tylko kluczy.
-        if product == item:
-            item_details['ilosc'] -= amount
-            saldo += (item_details['cena'] * amount)
-            product_found = True
-            history.append(f'Sprzedano {pdoduct} w ilosci {amount}')
-            break
-    if not product_found:
-        history.append(f'Nie udalo sie sprzedac towaru {product}, mamy go za malo na magazynie')
-        pass
-if operation == '7':
-    #TODO jak value bedzie wieksze od naszej listy to wyprintowac dlugosc listy instrukcja len()
-    value_from = input('Podaj poczatkowy zakres: ')
-    value_to = input('Podaj koncowy zakres: ')
-    if not value_to and not value_from:
-        print(history)
-    if value_from and not value_to:
-        print(history[value_from:])
+    print(initial_message)
+    operation = input('Podaj operacje ktora chcesz wykonac: ')
+    #TODO: Przerobic ponizszy if na match_case
+    if operation == '1':
+        amount = float(input('Podaj kwote, ktora chcesz dodac lub ujac z konta: '))
+        saldo += amount
+        #Jezeli chcemy odjac, to dajemy kwote ujemna
+        #TODO poprosic jeszcze o rodzaj operacji: czy dodajemy, czy odejmujemy
+        history.append(f'Wykonano instrukcje saldo, zasilono {amount}')
+    if operation == '2':
+        print(magazyn)
+        product = input('Podaj nazwe produktu: ')
+        #TODO zmienic na float, bo np kg.
+        amount = int(input('Podaj ilosc produktow: '))
+        product_found = False
+        #Najpierw sprawdzmy, czy mamy towar
+        for item, item_details in magazyn.items(): #Bez items byliby tylko kluczy.
+            if product == item:
+                item_details['ilosc'] -= amount
+                saldo += (item_details['cena'] * amount)
+                product_found = True
+                history.append(f'Sprzedano {product} w ilosci {amount}')
+                break
+        if not product_found:
+            history.append(f'Nie udalo sie sprzedac towaru {product}, mamy go za malo na magazynie')
+            pass
+    if operation == '7':
+        #TODO jak value bedzie wieksze od naszej listy to wyprintowac dlugosc listy instrukcja len()
+        value_from = input('Podaj poczatkowy zakres: ')
+        value_to = input('Podaj koncowy zakres: ')
+        if not value_to and not value_from:
+            print(history)
+        if value_from and not value_to:
+            print(history[value_from:])
