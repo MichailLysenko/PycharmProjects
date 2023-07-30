@@ -93,36 +93,44 @@ check_my_grades(1,2,3,1,5,6,3)
 #Wybrac strukture
 #Skorzystac z funkcji
 
+class Student:
+    def __init__(self, name, surname):
+        self.name = name
+        self.surname = surname
+    def __repr__(self):
+        return f"Imie = {self.name}, Nazwisko = {self.surname}"
+
+class Teacher:
+    def __init__(self, name, surname, subject, grades):
+        self.name = name
+        self.surname = surname
+        self.subject = subject
+        self.grades = grades
+    def __repr__(self):
+        return f"Imie = {self.name}, Nazwisko = {self.surname}, Przedmiót = {self.subject}, Klasy = {self.grades}"
+
+# TODO W domu zrobić klasy dla nauczyciela i wychowawcy i zmienili je w naszej szkole
+
 our_school = {
    "klasy": {
         "1a": {
-            "uczniowie":[{
-                "imie": "Jan",
-                "nazwisko": "Nowak"
-            }],
+            "uczniowie":[Student(name = "Jan", surname = "Kowalski")],
             "wychowawca":{
                 "imie": "Marta",
                 "nazwisko": "Daszek"
             }
         },
         "2a": {
-            "uczniowie":[{
-                "imie": "Jan",
-                "nazwisko": "Nowak"
-            }],
+            "uczniowie":[Student(name = "Jan", surname = "Nowak")]
+            },
             "wychowawca":{
                 "imie": "Marta",
                 "nazwisko": "Daszek"
             }
-        }
-    },
-    "nauczyciel":[{
-        "imie": "Andrzej",
-        "nazwisko": "Slup",
-        "klasy": ["1a", "2a"]
-    }]
-}
+        },
 
+    "nauczyciele":[Teacher(name='Andrzej', surname='Iwan', subject='WF', grades=['1a', '2a'])]
+    }
 
 def create_new_grade(grade):
     our_school["klasy"] [grade] = {
@@ -130,10 +138,7 @@ def create_new_grade(grade):
         "wychowawca": {}
     }
 def create_student_in_existing_grade(name, surname, grade):
-    our_school["klasy"][grade]["uczniowie"].append({
-        "imie": name,
-        "nazwisko": surname
-    })
+    our_school["klasy"][grade]["uczniowie"].append(Student(name=name, surname=surname))
 
 def create_new_student(name, surname, grade):
     grade_exists = our_school.get("klasy").get(grade)
@@ -146,6 +151,24 @@ def find_grade_by_class_number(class_number):
         if grade_number == class_number:
             return(f"Uczniowie to: {grade['uczniowie']} wychowawca to: {grade['wychowawca']}")
     return 'Niestety nie znaleziono Twojej klasy'
+
+def find_class_teachers(class_number):
+    found_teachers = []
+    for Teacher in our_school.get('nauczyciele'):
+        if class_number in Teacher.grades:
+            found_teachers.append(teacher)
+    return found_teachers
+def find_student_by_name(name,surname):
+    our_text = ''
+    for grade_number, grade in our_school['klasy'].items():
+        for student in grade.get('uczniowie'):
+            if name == student.name and surname == student.surname:
+                teachers = find_class_teachers(grade_number)
+                for teacher in teachers:
+                    out_text += f'Nauczyciel: {teacher.name} {teacher.surname} z przedmiotem {teacher.subject}\n'
+                return our_text
+    return 'Niestety Twoja klasa nie ma żadnych zajęć'
+
 
 initial_menu = "Witaj w swojej szkole! Podaj proszę co chcesz zrobić:\n 1.Utwórz\n 2.Zarządzaj\n 3.Koniec\n"
 create_menu = "Podaj, jakiego użytkownika chcesz utworzyć:\n 1.Uczeń\n 2.Nauczyciel\n 3.Wychowawca\n 4.Koniec\n" #TODO Koncy porobic samodzielnie
@@ -168,6 +191,9 @@ while not finish_program:
             class_number = input("Podaj nazwę klasy: ")
             text_to_display = find_grade_by_class_number(class_number)
             print(text_to_display)
-
-
+        elif manage_input == 2:
+            student_name = input('Podaj imię ucznia: ')
+            student_surname = input('Podaj nazwisko ucznia: ')
+            text = find_student_by_name(student_name, student_surname)
+            print(text)
 
