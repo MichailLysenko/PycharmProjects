@@ -44,3 +44,121 @@ def check_my_grades(*args):
 check_my_grades(1,2,3,1,5,6,3)
 '''
 #Obiektowosc. Klasy - to polaczenie zmiennych i funkcji
+
+#Utwórz program do zarządzania bazą szkolną.
+# Istnieje możliwość tworzenia trzech typów użytkowników (uczeń, nauczyciel, wychowawca)
+# a także zarządzania nimi.
+
+#Po uruchomieniu programu można wpisać jedną z następujących komend:
+#utwórz, zarządzaj, koniec.
+
+#Polecenie "utwórz" - Przechodzi do procesu tworzenia użytkowników.
+#Polecenie "zarządzaj" - Przechodzi do procesu zarządzania użytkownikami.
+#Polecenie "koniec" - Kończy działanie aplikacji.
+
+#Proces tworzenia użytkowników:
+
+#Należy wpisać opcję, którą chcemy wybrać: uczeń, nauczyciel, wychowawca, koniec.
+#Po wykonaniu każdej z opcji (oprócz "koniec") wyświetla to menu ponownie.
+#Polecenie "uczeń" - Należy pobrać imię i nazwisko ucznia
+# (jako jedna zmienna, można pobrać je jako dwie zmienne, jeżeli zostanie to poprawnie
+# obsłużone) oraz nazwę klasy (np. "3C")
+#Polecenie "nauczyciel" - Należy pobrać imię i nazwisko nauczyciela
+# (jako jedna zmienna, albo dwie, jeżeli zostanie to poprawnie obsłużone),
+# nazwę przedmiotu prowadzonego, a następnie w nowych liniach nazwy klas,
+# które prowadzi nauczyciel, aż do otrzymania pustej linii.
+#Polecenie "wychowawca" - Należy pobrać imię i nazwisko wychowawcy
+# (jako jedna zmienna, albo dwie, jeżeli zostanie to poprawnie obsłużone),
+# a także nazwę prowadzonej klasy.
+#Polecenie "koniec" - Wraca do pierwszego menu.
+
+#Proces zarządzania użytkownikami:
+
+#Należy wpisać opcję, którą chcemy wybrać: klasa, uczen, nauczyciel, wychowawca, koniec.
+# Po wykonaniu każdej z opcji (oprócz "koniec") wyświetla to menu ponownie.
+#Polecenie "klasa" - Należy pobrać klasę, którą chcemy wyświetlić (np. "3C")
+# program ma wypisać wszystkich uczniów, którzy należą do tej klasy,
+# a także wychowawcę tejże klasy.
+#Polecenie "uczeń" - Należy pobrać imię i nazwisko uczenia, program ma wypisać wszystkie
+# lekcje, które ma uczeń a także nauczycieli, którzy je prowadzą.
+#Polecenie "nauczyciel" - Należy pobrać imię i nazwisko nauczyciela, program ma wypisać
+# wszystkie klasy, które prowadzi nauczyciel.
+#Polecenie "wychowawca" - Należy pobrać imię i nazwisko nauczyciela, a program ma wypisać
+# wszystkich uczniów, których prowadzi wychowawca.
+#Polecenie "koniec" - Wraca do pierwszego menu.
+
+#System do zarzadzania szkola
+#Kilka typow menu
+#Glowne i do tworzenia uzytkownikow a tak ze do zarzadzania uzytkownikami
+#Wybrac strukture
+#Skorzystac z funkcji
+
+our_school = {
+   "klasy": {
+        "1a": {
+            "uczniowie":[{
+                "imie": "Jan",
+                "nazwisko": "Nowak"
+            }],
+            "wychowawca":{
+                "imie": "Marta",
+                "nazwisko": "Daszek"
+            }
+        },
+        "2a": {
+            "uczniowie":[{
+                "imie": "Jan",
+                "nazwisko": "Nowak"
+            }],
+            "wychowawca":{
+                "imie": "Marta",
+                "nazwisko": "Daszek"
+            }
+        }
+    },
+    "nauczyciel":[{
+        "imie": "Andrzej",
+        "nazwisko": "Slup",
+        "klasy": ["1a", "2a"]
+    }]
+}
+
+
+def create_new_grade(grade):
+    our_school["klasy"] [grade] = {
+        "uczniowie": [],
+        "wychowawca": {}
+    }
+def create_student_in_existing_grade(name, surname, grade):
+    our_school["klasy"][grade]["uczniowie"].append({
+        "imie": name,
+        "nazwisko": surname
+    })
+
+def create_new_student(name, surname, grade):
+    grade_exists = our_school.get("klasy").get(grade)
+    if not grade_exists:
+        create_new_grade(grade)
+    create_student_in_existing_grade(name, surname, grade)
+
+initial_menu = "Witaj w swojej szkole! Podaj proszę co chcesz zrobić:\n 1.Utwórz\n 2.Zarządzaj\n 3.Koniec\n"
+create_menu = "Podaj, jakiego użytkownika chcesz utworzyć:\n 1.Uczeń\n 2.Nauczyciel\n 3.Wychowawca\n 4.Koniec\n" #TODO Koncy porobic samodzielnie
+finish_program = False
+while not finish_program:
+    main_guess = input(initial_menu)
+    if main_guess == "1":
+        # Wchodzimy w tryb dodawania czegokolwiek do naszej szkoly
+        create_input = input(create_menu)
+        if create_input == "1":
+            name = input("Podaj imię ucznia: ")
+            surname = input("Podaj nazwisko ucznia: ")
+            grade = input("Podaj klasę ucznia: ")
+            grade_exists = check_wether_grade_exists(grade=grade)
+            if grade_exists:
+                create_new_user(name, surname, grade)
+            else:
+                create_new_grade(grade)
+                create_new_user(name, surname, grade)
+            print(our_school)
+
+
