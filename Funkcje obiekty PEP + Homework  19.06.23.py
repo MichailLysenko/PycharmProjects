@@ -143,6 +143,7 @@ def create_new_student(name, surname, grade):
 
 initial_menu = "Witaj w swojej szkole! Podaj proszę co chcesz zrobić:\n 1.Utwórz\n 2.Zarządzaj\n 3.Koniec\n"
 create_menu = "Podaj, jakiego użytkownika chcesz utworzyć:\n 1.Uczeń\n 2.Nauczyciel\n 3.Wychowawca\n 4.Koniec\n" #TODO Koncy porobic samodzielnie
+manage_menu = create_menu = "Podaj, kim chcesz zarządzać:\n 1.Klasa\n 2.Uczeń\n 3.Nauczyciel\n 4.Wychowawca\n 5.Koniec\n"
 finish_program = False
 while not finish_program:
     main_guess = input(initial_menu)
@@ -153,12 +154,15 @@ while not finish_program:
             name = input("Podaj imię ucznia: ")
             surname = input("Podaj nazwisko ucznia: ")
             grade = input("Podaj klasę ucznia: ")
-            grade_exists = check_wether_grade_exists(grade=grade)
-            if grade_exists:
-                create_new_user(name, surname, grade)
-            else:
-                create_new_grade(grade)
-                create_new_user(name, surname, grade)
+            create_new_student(name, surname, grade)
             print(our_school)
+    elif main_guess == "2":
+        manage_input = input(manage_menu)
+        if manage_input == 1:
+            class_number = input("Podaj nazwę klasy: ")
+            for grade_number, grade in our_school["klasy"].items():
+                if grade_number = class_number:
+                    print(f"Uczniowie to: {grade['uczniowie']} wychowawca to: {grade['wychowawca']}")
+                    break
 
 
