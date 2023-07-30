@@ -156,10 +156,10 @@ def find_class_teachers(class_number):
     found_teachers = []
     for Teacher in our_school.get('nauczyciele'):
         if class_number in Teacher.grades:
-            found_teachers.append(teacher)
+            found_teachers.append(Teacher)
     return found_teachers
 def find_student_by_name(name,surname):
-    our_text = ''
+    our_text = ""
     for grade_number, grade in our_school['klasy'].items():
         for student in grade.get('uczniowie'):
             if name == student.name and surname == student.surname:
