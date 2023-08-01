@@ -14,6 +14,7 @@ magazyn = {
 history = []
 new_product = None
 new_amount = None
+new_saldo = None
 initial_message = 'Witaj w Twoim magazynie. Lista dostepnych komend to:\n' \
                   ' 1. Saldo\n 2. Sprzedaz\n 3. Zakup\n 4. Konto\n 5. Lista\n 6. Magazyn\n 7. Przeglad\n 8. Koniec'
 
@@ -77,6 +78,7 @@ while not end_program:
                 magazyn[new_product] = {}
                 magazyn[new_product]['ilosc'] = new_amount
                 magazyn[new_product]['cena'] = price
+                new_saldo = saldo - price_to_pay
 
 
                 product_found = False
@@ -93,11 +95,29 @@ while not end_program:
     # jesli prod, jest - dodac ilosc, jesli nie - dodac nowy produkt)
     # - Zmniejszyc stan konta
     if operation == '4':  # program wyswietla stan konta
-        pass
+        if saldo > 0:
+            print(saldo)
+        elif new_saldo > 0:
+            print(new_saldo)
+        else:
+            print('Konto magazynu jest puste')
+
     if operation == '5':  # program wyswietla calkowity stan magazynu wraz z cenami produktow i ich iloscia
-        # print
-        pass
-    if operation == '6':  # Magazyn - Program wyświetla stan magazynu dla konkretnego produktu. Należy podać jego nazwę.
+
+        print(magazyn)
+
+    if operation == '6':
+        searched_product = input("Prosze podac nazwe produktu: ")
+        if product == searched_product:
+            print(product)
+
+        elif product_found == searched_product:
+            print (product_found)
+        elif new_product == searched_product:
+            print (new_product)
+        else:
+            print(searched_product)
+        # Magazyn - Program wyświetla stan magazynu dla konkretnego produktu. Należy podać jego nazwę.
         # dane wejsciowe - nazwa, wyszukiwac po nazwie
         pass
     # TODO zrobic For, porownac, czy mamy produkt.
