@@ -15,13 +15,12 @@ history = []
 new_product = None
 new_amount = None
 new_saldo = None
+product = None
 initial_message = 'Witaj w Twoim magazynie. Lista dostepnych komend to:\n' \
                   ' 1. Saldo\n 2. Sprzedaz\n 3. Zakup\n 4. Konto\n 5. Lista\n 6. Magazyn\n 7. Przeglad\n 8. Koniec'
 
 end_program = False
 while not end_program:
-    print(magazyn)
-    print(saldo)
     print(initial_message)
     operation = input('Podaj operacje ktora chcesz wykonac: ')
     # TODO: Przerobic ponizszy if na match_case
@@ -103,20 +102,11 @@ while not end_program:
             print('Konto magazynu jest puste')
 
     if operation == '5':  # program wyswietla calkowity stan magazynu wraz z cenami produktow i ich iloscia
-
         print(magazyn)
 
     if operation == '6':
-        searched_product = input("Prosze podac nazwe produktu: ")
-        if product == searched_product:
-            print(product)
+        searched_product = str(input("Prosze podac nazwe produktu: "))
 
-        elif product_found == searched_product:
-            print (product_found)
-        elif new_product == searched_product:
-            print (new_product)
-        else:
-            print(searched_product)
         # Magazyn - Program wyświetla stan magazynu dla konkretnego produktu. Należy podać jego nazwę.
         # dane wejsciowe - nazwa, wyszukiwac po nazwie
         pass
