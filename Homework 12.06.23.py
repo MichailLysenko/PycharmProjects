@@ -68,7 +68,7 @@ for key, student in students_dict.items():
         #jesli prod, jest - dodac ilosc, jesli nie - dodac nowy produkt)
     # - Zmniejszyc stan konta
 #Konto - program wyswietla stan konta
-#Lista - program wyswietla zalkowity stan magazynu wraz z cenami produktow i ich iloscia
+#Lista - program wyswietla calkowity stan magazynu wraz z cenami produktow i ich iloscia
     #print
 #Magazyn - Program wyświetla stan magazynu dla konkretnego produktu. Należy podać jego nazwę.
     #dane wejsciowe - nazwa, wyszukiwac po nazwie
@@ -100,6 +100,8 @@ magazyn = {
     },
 }
 history = []
+new_product = None
+new_amount = None
 initial_message = 'Witaj w Twoim magazynie. Lista dostepnych komend to:\n'\
                   ' 1. Saldo\n 2. Sprzedaz\n 3. Zakup\n 4. Konto\n 5. Lista\n 6. Magazyn\n 7. Przeglad\n 8. Koniec'
 
@@ -118,7 +120,7 @@ while not end_program:
         history.append(f'Wykonano instrukcje saldo, zasilono {amount}')
     if operation == '2':
         print(magazyn)
-        product = input('Podaj nazwe produktu: ')
+        product = str(input('Podaj nazwe produktu: '))
         #TODO zmienic na float, bo np kg.
         amount = int(input('Podaj ilosc produktow: '))
         product_found = False
@@ -133,6 +135,51 @@ while not end_program:
         if not product_found:
             history.append(f'Nie udalo sie sprzedac towaru {product}, mamy go za malo na magazynie')
             pass
+    if operation == '3':
+        print(magazyn)
+        product = str(input('Podaj nazwe produktu: '))
+        # TODO zmienic na float, bo np kg.
+        amount = int(input('Podaj ilosc produktow: '))
+        price = float(input('Podaj cene produktu: '))
+        product_found = False
+        # Najpierw sprawdzmy, czy mamy towar
+
+        for item, item_details in magazyn.items():  # Bez items byliby tylko kluczy.
+            if product == item:
+                item_details['ilosc'] += amount
+                saldo -= (item_details['cena'] * amount) and saldo > 0
+                product_found = True
+
+                history.append(f'Zakupiono {product} w ilosci {amount}')
+                break
+        if not product_found:
+
+                new_product = str(input(f'Jeszcze nie mamy takiego produktu na magazynie.\nProsze ponownie podac nazwe produktu -\nzostanie on wpisany do naszej bazy danych: ')),
+                new_amount = int(input(f'Prosze podac ilosc produktu: ')),
+                print(f'Zakupiono{new_product} w ilosci {new_amount} sztuk')
+                for item_details in magazyn.items():  # Bez items byliby tylko kluczy.
+                    magazyn.items += new_product
+
+                    saldo -= (item_details['cena'] * new_amount) and saldo > 0
+                    product_found = False
+                history.append(f'Zakupiono {new_product} w ilosci {new_amount} sztuk'),
+
+        # program pobiera nazwe produktu, cene oraz liczbe sztuk.
+    #produkt zostaje dodany do magazynu, jesli go nie bylo
+    #Obliczenia są wykonane odwrotnie do komendy "sprzedaz".
+    #Saldo konta po zakończeniu operacji „zakup” nie może być ujemne.
+    # - Dodac produkt do magazynu
+        #jesli prod, jest - dodac ilosc, jesli nie - dodac nowy produkt)
+    # - Zmniejszyc stan konta
+    if operation == '4': #program wyswietla stan konta
+        pass
+    if operation == '5': #program wyswietla calkowity stan magazynu wraz z cenami produktow i ich iloscia
+    #print
+        pass
+    if operation == '6': #Magazyn - Program wyświetla stan magazynu dla konkretnego produktu. Należy podać jego nazwę.
+    #dane wejsciowe - nazwa, wyszukiwac po nazwie
+        pass
+#TODO zrobic For, porownac, czy mamy produkt.
     if operation == '7':
         #TODO jak value bedzie wieksze od naszej listy to wyprintowac dlugosc listy instrukcja len()
         value_from = input('Podaj poczatkowy zakres: ')
