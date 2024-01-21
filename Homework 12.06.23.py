@@ -106,6 +106,10 @@ while not end_program:
 
     if operation == '6':
         searched_product = str(input("Prosze podac nazwe produktu: "))
+        if searched_product == magazyn.keys():
+            print(f"W magazynie znaleziono {searched_product}")
+        else:
+            print(f"Nie znaleziono {searched_product}")
 
         # Magazyn - Program wyświetla stan magazynu dla konkretnego produktu. Należy podać jego nazwę.
         # dane wejsciowe - nazwa, wyszukiwac po nazwie
