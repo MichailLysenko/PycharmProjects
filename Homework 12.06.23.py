@@ -6,6 +6,10 @@ magazyn = {
         'ilosc': 2,
         'cena': 100
     },
+    'samochod': {
+        'ilosc': 3,
+        'cena': 1500
+    },
     'lodka': {
         'ilosc': 3,
         'cena': 1500
@@ -125,3 +129,5 @@ while not end_program:
             print(history)
         if value_from and not value_to:
             print(history[value_from:])
+
+    

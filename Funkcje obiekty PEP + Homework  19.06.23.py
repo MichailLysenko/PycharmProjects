@@ -94,23 +94,30 @@ check_my_grades(1,2,3,1,5,6,3)
 # Skorzystac z funkcji
 
 class Student:
-    def __init__(self, name, surname):
+    def __init__(self, name, surname, class_name):
         self.name = name
         self.surname = surname
+        self.class_name = class_name
 
     def __repr__(self):
-        return f"Imie = {self.name}, Nazwisko = {self.surname}"
+        return f"Imie = {self.name}, Nazwisko = {self.surname}, Klasa = {self.class_name}"
 
 
 class Teacher:
-    def __init__(self, name, surname, subject, grades):
+    def __init__(self, name, surname, subject, class_name):
         self.name = name
         self.surname = surname
         self.subject = subject
-        self.grades = grades
+        self.class_name = class_name
+
+class Educator:
+    def __init__(self, name, surname, class_name):
+        self.name = name
+        self.surname = surname
+        self.class_name = class_name
 
     def __repr__(self):
-        return f"Imie = {self.name}, Nazwisko = {self.surname}, Przedmiót = {self.subject}, Klasy = {self.grades}"
+        return f"Imie = {self.name}, Nazwisko = {self.surname}, Przedmiót = {self.subject}, Klasy = {self.class_name}"
 
 
 # TODO W domu zrobić klasy dla nauczyciela i wychowawcy i zmienili je w naszej szkole
@@ -118,14 +125,14 @@ class Teacher:
 our_school = {
     "klasy": {
         "1a": {
-            "uczniowie": [Student(name="Jan", surname="Kowalski")],
+            "uczniowie": [Student(name="Jan", surname="Kowalski", class_name="1a")],
             "wychowawca": {
                 "imie": "Marta",
                 "nazwisko": "Daszek"
             }
         },
         "2a": {
-            "uczniowie": [Student(name="Jan", surname="Nowak")],
+            "uczniowie": [Student(name="Jan", surname="Nowak", class_name="2a")],
             "wychowawca": {
                 "imie": "Marta",
                 "nazwisko": "Daszek"
@@ -133,7 +140,8 @@ our_school = {
         }
     },
 
-    "nauczyciele": [Teacher(name='Andrzej', surname='Iwan', subject='WF', grades=['1a', '2a'])]
+    "nauczyciele": [Teacher(name='Andrzej', surname='Iwan', subject='WF', class_name=['1a', '2a'])],
+    "wychowawcy": [Educator(name= "Włodzimierz", surname="Stefanczyk", class_name=["1a"])]
 }
 
 
@@ -144,30 +152,52 @@ def create_new_grade(grade):
     }
 
 
-def create_student_in_existing_grade(name, surname, grade):
-    our_school["klasy"][grade]["uczniowie"].append(Student(name=name, surname=surname))
+def create_student_in_existing_class(name, surname, class_name):
+    our_school["klasy"][grade]["uczniowie"].append(Student(name=name, surname=surname, class_name=class_name))
+
+def create_teacher_in_existing_class(name,surname,subject, class_name):
+    our_school ["nauczyciele"][Teacher].append(Teacher(name=name, surname=surname, subject=subject, class_name=class_name))
+
+def create_educator_in_existing_class(name,surname,class_name):
+    our_school ["wychowawcy"][Educator].append(Educator(name=name, surname=surname, class_name=class_name))
+
+def create_new_student(name, surname, class_name):
+    class_exists = our_school.get("klasy").get(class_name)
+    if not class_exists:
+        create_new_class_name(class_name)
+    create_student_in_existing_class(name, surname, class_name)
+
+def create_new_teacher(name,surname, subject, class_name):
+    teachers_exists = our_school.get("nauczyciele").get(class_name)
+    if not teachers_exists:
+        create_teacher_in_existing_class(name,surname,subject,class_name)
+
+def create_new_educator(name,surname,class_name):
+    educator_exists = our_school.get("wychowawcy").get(class_name)
+    if not educator_exists:
+        create_educator_in_existing_class(name,surname,class_name)
 
 
-def create_new_student(name, surname, grade):
-    grade_exists = our_school.get("klasy").get(grade)
-    if not grade_exists:
-        create_new_grade(grade)
-    create_student_in_existing_grade(name, surname, grade)
-
-
-def find_grade_by_class_number(class_number):
-    for grade_number, grade in our_school["klasy"].items():
+def find_grade_by_class_name(class_grade):
+    for class_grade, grade in our_school["klasy"].items():
         if grade_number == class_number:
             return (f"Uczniowie to: {grade['uczniowie']} wychowawca to: {grade['wychowawca']}")
     return 'Niestety nie znaleziono Twojej klasy'
 
 
-def find_class_teachers(class_number):
+def find_class_teachers(class_name):
     found_teachers = []
     for Teacher in our_school.get('nauczyciele'):
-        if class_number in Teacher.grades:
+        if class_name in Teacher.grades:
             found_teachers.append(Teacher)
     return found_teachers
+
+def find_class_educators(class_name):
+    found_educator = []
+    for Educator in our_school.get("wychowawcy"):
+        if class_name in Educator.grades:
+            found_educator.append(Educator)
+    return found_educator
 
 
 def find_student_by_name(name, surname):
@@ -183,8 +213,9 @@ def find_student_by_name(name, surname):
 
 
 initial_menu = "Witaj w swojej szkole! Podaj proszę co chcesz zrobić:\n 1.Utwórz\n 2.Zarządzaj\n 3.Koniec\n"
+
 create_menu = "Podaj, jakiego użytkownika chcesz utworzyć:\n 1.Uczeń\n 2.Nauczyciel\n 3.Wychowawca\n 4.Koniec\n"  # TODO Koncy porobic samodzielnie
-manage_menu = create_menu = "Podaj, kim chcesz zarządzać:\n 1.Klasa\n 2.Uczeń\n 3.Nauczyciel\n 4.Wychowawca\n 5.Koniec\n"
+manage_menu = "Podaj, kim chcesz zarządzać:\n 1.Klasa\n 2.Uczeń\n 3.Nauczyciel\n 4.Wychowawca\n 5.Koniec\n"
 finish_program = False
 while not finish_program:
     main_guess = input(initial_menu)
@@ -194,17 +225,50 @@ while not finish_program:
         if create_input == "1":
             name = input("Podaj imię ucznia: ")
             surname = input("Podaj nazwisko ucznia: ")
-            grade = input("Podaj klasę ucznia: ")
-            create_new_student(name, surname, grade)
+            class_name = input("Podaj klasę ucznia: ")
+            create_new_student(name, surname, class_name)
             print(our_school)
+        elif create_input == "2":
+            name = input("Podaj imie nauczyciela: ")
+            surname = input ("Podaj nazwisko nauczyciela:")
+            subject = input ("Podaj przedmiot nauczyciela: ")
+            class_name = input ("Podaj nazwe klasy nauczyciela: ")
+            create_new_teacher(name, surname, subject, class_name)
+            print(our_school)
+        elif create_input == "3":
+            name = input ("Podaj imie wychowawcy: ")
+            surname = input("Podaj nazwisko wychowawcy: ")
+            class_name = input("Podaj klase wychowawcy: ")
+            create_new_educator(name, surname, class_name)
+            print(our_school)
+        elif create_input == "4":
+            print("Koniec działania programu")
+
     elif main_guess == "2":
-        manage_input = int(input(manage_menu))
-        if manage_input == 1:
-            class_number = input("Podaj nazwę klasy: ")
-            text_to_display = find_grade_by_class_number(class_number)
+        manage_input = input(create_menu) = int(input(manage_menu))
+        if manage_input == "1:
+            class_name = input("Podaj nazwę klasy: ")
+            text_to_display = find_grade_by_class_number(class_name)
             print(text_to_display)
-        elif manage_input == 2:
+        elif manage_input == "2":
             student_name = input('Podaj imię ucznia: ')
             student_surname = input('Podaj nazwisko ucznia: ')
             text = find_student_by_name(student_name, student_surname)
             print(text)
+        elif manage_input == "3":
+            teachers_name = input('Podaj imię nauczyciela: ')
+            teachers_surname = input('Podaj nazwisko nauczyciela: ')
+            class_name = input("Podaj nazwę klasy: ")
+            text_to_display = find_class_teachers(our_school)
+            print(text_to_display)
+        elif manage_input == "4":
+            educator_name = input('Podaj imię wychowawcy: ')
+            educator_surname = input('Podaj nazwisko wychowawcy: ')
+            text = find_class_educators(our_school)
+            print(text)
+        elif manage_input == "5":
+            print("Koniec dzialania programu")
+    elif main_guess == "3":
+        print("Koniec dialania programu")
+
+
