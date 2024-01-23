@@ -92,7 +92,7 @@ check_my_grades(1,2,3,1,5,6,3)
 # Glowne i do tworzenia uzytkownikow a tak ze do zarzadzania uzytkownikami
 # Wybrac strukture
 # Skorzystac z funkcji
-
+'''
 class Student:
     def __init__(self, name, surname, class_name):
         self.name = name
@@ -119,7 +119,7 @@ class Educator:
     def __repr__(self):
         return f"Imie = {self.name}, Nazwisko = {self.surname}, Przedmiót = {self.subject}, Klasy = {self.class_name}"
 
-
+'''
 # TODO W domu zrobić klasy dla nauczyciela i wychowawcy i zmienili je w naszej szkole
 
 our_school = {
@@ -153,7 +153,7 @@ def create_new_grade(grade):
 
 
 def create_student_in_existing_class(name, surname, class_name):
-    our_school["klasy"][grade]["uczniowie"].append(Student(name=name, surname=surname, class_name=class_name))
+    our_school["klasy"][class_name]["uczniowie"].append(Student(name=name, surname=surname, class_name=class_name))
 
 def create_teacher_in_existing_class(name,surname,subject, class_name):
     our_school ["nauczyciele"][Teacher].append(Teacher(name=name, surname=surname, subject=subject, class_name=class_name))
@@ -245,8 +245,8 @@ while not finish_program:
             print("Koniec działania programu")
 
     elif main_guess == "2":
-        manage_input = input(create_menu) = int(input(manage_menu))
-        if manage_input == "1:
+        manage_input = int(input(manage_menu))
+        if manage_input == "1":
             class_name = input("Podaj nazwę klasy: ")
             text_to_display = find_grade_by_class_number(class_name)
             print(text_to_display)
