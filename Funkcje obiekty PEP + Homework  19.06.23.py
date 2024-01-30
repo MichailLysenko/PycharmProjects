@@ -92,7 +92,7 @@ check_my_grades(1,2,3,1,5,6,3)
 # Glowne i do tworzenia uzytkownikow a tak ze do zarzadzania uzytkownikami
 # Wybrac strukture
 # Skorzystac z funkcji
-'''
+
 class Student:
     def __init__(self, name, surname, class_name):
         self.name = name
@@ -116,10 +116,10 @@ class Educator:
         self.surname = surname
         self.class_name = class_name
 
-    def __repr__(self):
-        return f"Imie = {self.name}, Nazwisko = {self.surname}, Przedmiót = {self.subject}, Klasy = {self.class_name}"
+  #  def __repr__(self):
+    #    return f"Imie = {self.name}, Nazwisko = {self.surname}, Przedmiót = {self.subject}, Klasy = {self.class_name}"
 
-'''
+
 # TODO W domu zrobić klasy dla nauczyciela i wychowawcy i zmienili je w naszej szkole
 
 our_school = {
@@ -162,7 +162,11 @@ def create_educator_in_existing_class(name,surname,class_name):
     our_school ["wychowawcy"][Educator].append(Educator(name=name, surname=surname, class_name=class_name))
 
 def create_new_student(name, surname, class_name):
-    class_exists = our_school.get("klasy").get(class_name)
+    our_school["klasy"][grade] = {
+        "uczniowie": []
+    }
+def create_new_student(name, surname, class_name):
+    our_school.get("klasy").get(class_name)
     if not class_exists:
         create_new_class_name(class_name)
     create_student_in_existing_class(name, surname, class_name)
