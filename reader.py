@@ -15,16 +15,25 @@ plakat,czerwony,8,0
 """
 
 import csv
+import sys
+print(sys.argv)
 
 file_read = []
 
-with open ("file_lm_in.csv") as file_stream:
+with open ("in.csv") as file_stream:
     for line in csv.reader(file_stream):
-        file_read.append(file_stream)
-        print(file_read)
+        file_read.append(line)
+
+print(file_read)
+file_read[0][0] = 'gitara'
+file_read[1][3] = 'kubek'
+file_read[2][1] = '17'
+file_read[3][3] = 'kij'
+print(file_read)
 
 
-with open ("file_lm_out.csv", "w") as file_stream:
-    csv_writer = csv.writer(file_stream)
+with open ("out.csv", "w", newline='') as file_stream:
+    csv_writer = csv.writer(file_stream, delimiter=",")
     csv_writer.writerows(file_read)
+
 
