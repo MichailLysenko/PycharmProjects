@@ -19,6 +19,8 @@ https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}
 
 W URL należy uzupełnić parametry: latitude, longitude oraz searched_date
 """
+# Lecture venv, pip, dict operations
+"""
 import requests
 # 1. Pytanie o parametry
 latitude = 50
@@ -48,6 +50,7 @@ for number in some_list:
 
 # Odczytywanie plikow json
 """
+"""
 with open ("weather_forecast.json") as file_stream:
     response_data = file_stream.read()
     # response_data_dict = json.loads(response_data)
@@ -58,7 +61,7 @@ print(response_data_dict["Latitude"])
 # json.dump(<dane wejsciowe>, <file_stream>) # Sluzy do zapisywania danych do pliku (wewnatrz kontekstu [with ...])
 # json.load(<file_stream>) # Sluzy do odczytywania danych z pliku. Ale nie zawsze mamy dane w postaci pliku (wewnatrz kontekstu [with ...])
 # json.loads() # Pozwala na zamiany stringa w postaci JSON na typ dict
-
+"""
 response_data_str = response.text
 print(type(response_data_str))
 response_data_dict = json.loads(response_data_str) # .loads() pozwala zamienic str na dict
@@ -68,7 +71,58 @@ response_data_dict["elevation"] = 123456789.0 # Jak mozemy zmodyfikowac dane
 data_as_string = json.dumps(response_data_dict) # .dumps() zamienia slownik na string w postaci JSON
 print(type(data_as_string), data_as_string)
 
+# virtualenv - komenda do zarzadzania srodowiskami wirtualnymi, i potem podaje sie nazwa np "my_env"
 
+# Instalacja paczek z pliku (np. requirements.txt):
+# pip install -r requirements.txt
+"""
+"""
+# Warsztaty
+# https://fakestoreapi.com/products/1
+"""
+import requests
+import json # Konwertowanie JSON na Python (dict, string, list) i odwrotnie
+
+# Operacje na FakeStoreAPI
+
+BASE_URL = "https://fakestoreapi.com/products/1"
+"""
+# Pobieranie danych przy uzyciu GET
+response = requests.get(f"{BASE_URL}/products/1")
+#print(response)
+#print(type(response.text)), response.text)
+
+# Sposob 1: Zamiana odpowiedzi JSONowej na dict - sposob uniwersalny
+response_text = response.text # Pojawia sie tekst
+print(response_text)
+response_dict = json.loads(response_text)
+# Zmiana na Python. Dane w postaci JSON. Tutaj powstaje pelnoprawny slownik zbudowany na stringu.
+print(response_dict["id"])
+print(response_dict["title"])
+
+# Sposob 2: Zamiana odpowiedzi JSONowej na dict - wbudowana metoda w requests
+response_dict = response.json() # Wyciaganie danych
+print(response_dict)
+print(response_dict["id"])
+print(response_dict["title"])
+"""
+# Dodawanie nowych danych przy uzyciu POST
+data = {
+    "title": "test product",
+    "price": 13.5,
+    "description": "lorem ipsum set",
+    "image": "https://i.pravatar.cc",
+    "category": "electronic"
+}
+response = requests.post(f"{BASE_URL}/products", json=data)
+response_dict = response.json()
+
+with open("storage.json", "w") as file_stream:
+    response_json = json.dumps(response_dict)
+    file_stream.write(response_json)
+
+# response = requests.get(f"{BASE_URL}/products/21")
+# print(response.json())
 """
 response = requests.get("https://api.open-meteo.com/v1/forecast?latitude=50&longitude=50&start_date=2024-03-28&end_date=2024-03-28")
 print(response)
