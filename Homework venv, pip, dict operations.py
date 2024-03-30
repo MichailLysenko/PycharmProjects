@@ -41,26 +41,23 @@ response = requests.get(URL) # Wysylamy zapytanie do API
 print(response.json()["daily"]["rain_sum"])
 
 weather_forecast_result = response.json()["daily"]["rain_sum"]
-element = weather_forecast_result[0]
+element_of_weather_result = weather_forecast_result[0]
 
 
 with open("new_weather_forecast.json", mode="w", encoding="utf-8") as file_stream:
 
-
-    print(f"W miejscowosci {city} w dniu {searched_date}")
-
-    if element > 0.0:
-        wynik = "będzie padać"
-        print(wynik)
-    elif element == 0.0:
-        print(f"nie będzie padać")
+    if element_of_weather_result > 0.0:
+        result = "będzie padać"
+        print(result)
+    elif element_of_weather_result == 0.0:
+        result = "nie będzie padać"
     else:
-        print("Nie wiem")
+        result = "nie mogę wskazać prognozu pogody"
 
     # Przepisac wynik do zmiennej
-
-    json.dump(weather_forecast_result, file_stream)
-    json.dump([f"W miejscowosci {city} w dniu {searched_date}" for element in weather_forecast_result], file_stream) #encoding="UTF8")
+    print(f"W miejscowosci {city} w dniu {searched_date} {result}")
+    # json.dump(weather_forecast_result, file_stream)
+    json.dump(f"W miejscowosci {city} w dniu {searched_date} {result}" , file_stream)
 
 #response_data = response.json() # Zamiana otrzymanych danych na slownik
 #print(response_data)
