@@ -38,27 +38,29 @@ searched_date = input("Podaj datę dla której chcesz sprawdzić pogodę. Prosz�
 URL = f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&hourly=rain&daily=rain_sum&timezone=Europe%2FLondon&start_date={searched_date}&end_date={searched_date}"
 # 3. Wysłanie zapytania
 response = requests.get(URL) # Wysylamy zapytanie do API
-print(response.json()["daily"]["rain_sum"][0])
+print(response.json()["daily"]["rain_sum"])
 
-weather_forecast_result = response.json()["daily"]["rain_sum"][0]
-"""
-for element in weather_forecast_result:
-    if weather_forecast_result > 0.0:
-        print(f"{searched_date} będzie padać")
-    elif weather_forecast_result == 0.0:
-        print(f"{searched_date} nie będzie padać")
+weather_forecast_result = response.json()["daily"]["rain_sum"]
+element = weather_forecast_result[0]
+
+
+with open("new_weather_forecast.json", mode="w", encoding="utf-8") as file_stream:
+
+
+    print(f"W miejscowosci {city} w dniu {searched_date}")
+
+    if element > 0.0:
+        wynik = "będzie padać"
+        print(wynik)
+    elif element == 0.0:
+        print(f"nie będzie padać")
     else:
         print("Nie wiem")
-"""
-with open("new_weather_forecast.json", mode="w") as file_stream:
-    json.dump(response.json()["daily"]["rain_sum"], file_stream)
-    print(f"W miejscowosci {city} {searched_date}")
-    for element in weather_forecast_result:
-        if weather_forecast_result >= 0.0:
-            print(f"{searched_date} będzie padać")
-        elif weather_forecast_result == 0.0:
-            print(f"{searched_date} nie będzie padać")
-        else:
-            print("Nie wiem")
+
+    # Przepisac wynik do zmiennej
+
+    json.dump(weather_forecast_result, file_stream)
+    json.dump([f"W miejscowosci {city} w dniu {searched_date}" for element in weather_forecast_result], file_stream) #encoding="UTF8")
+
 #response_data = response.json() # Zamiana otrzymanych danych na slownik
 #print(response_data)
