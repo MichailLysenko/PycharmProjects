@@ -57,7 +57,7 @@ with open("new_weather_forecast.json", mode="w", encoding="utf-8") as file_strea
     # Przepisac wynik do zmiennej
     print(f"W miejscowosci {city} w dniu {searched_date} {result}")
     # json.dump(weather_forecast_result, file_stream)
-    json.dump(f"W miejscowosci {city} w dniu {searched_date} {result}" , file_stream)
+    json.dump(f"W miejscowosci {city} w dniu {searched_date} {result}", file_stream)
 
 #response_data = response.json() # Zamiana otrzymanych danych na slownik
 #print(response_data)
