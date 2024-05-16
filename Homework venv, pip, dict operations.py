@@ -48,22 +48,31 @@ else:
     #
     weather_forecast_result = response.json()["daily"]["rain_sum"]
     element_of_weather_result = weather_forecast_result[0]
+    data[searched_date] = element_of_weather_result
     #
     #
-    with open("new_weather_forecast2.json", mode="a", encoding="utf-8") as file_stream:
-        if element_of_weather_result > 0.0:
-            result = "będzie padać"
-            print(result)
-        elif element_of_weather_result == 0.0:
-            result = "nie będzie padać"
-            print(result)
-        else:
-            result = "nie mogę wskazać prognozu pogody"
+
+    if element_of_weather_result > 0.0:
+        result = "będzie padać"
+        print(result)
+    elif element_of_weather_result == 0.0:
+        result = "nie będzie padać"
+        print(result)
+    else:
+        result = "nie mogę wskazać prognozu pogody"
     #
     #     # Przepisac wynik do zmiennej
     print(f"W miejscowosci {city} w dniu {searched_date} {result}")
+    end_result = f"W miejscowosci {city} w dniu {searched_date} {result}"
     # new_data = json.dump(new_weather_forecast2, file_stream)
-    file_stream.write(f"W miejscowosci {city} w dniu {searched_date} {result}\n") #Czy tutaj nalezy zmienic format odpowiedzi na dict? Tak, jak w pliku z danymi "New weather forecast2"
+    with open("new_weather_forecast2.json", mode='w') as file_stream:
+        json.dump(data, file_stream)
+    #
+    # file_stream.write(f"W miejscowosci {city} w dniu {searched_date} {result}\n")
+    # Czy tutaj nalezy zmienic format odpowiedzi na dict? Tak, jak w pliku z danymi "New weather forecast2"
+    # payload = dict(searched_date=element_of_weather_result)
+    # r = requests.post("new_weather_forecast2.json", data=payload)
+    # print(r.text)
     # json.loads('searched_date'[value],)
     #     #json.dump(f"W miejscowosci {city} w dniu {searched_date} {result}", file_stream and "\n")
     #
