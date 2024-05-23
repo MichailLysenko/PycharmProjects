@@ -1,9 +1,11 @@
 import json
 import requests
 import geopy
+
 with open("new_weather_forecast2.json", mode="r") as file_stream:
     data = json.load(file_stream)
 print(data)
+
 searched_data = input("Podaj datę dla której chcesz sprawdzić pogodę. Proszę użyć formatu 'rok-miesiąc-dzień': ")
 if searched_data in data:
     value = data[searched_data]
