@@ -70,6 +70,57 @@ class WeatherForecast:
         longitude = location.longitude
         return latitude, longitude
 
+    def get_rain_forecast(self):
+    # Budowa linku do zapytania
+        URL = f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&hourly=rain&daily=rain_sum&timezone=Europe%2FLondon&start_date={searched_date}&end_date={searched_date}"
+    # Wysłanie zapytania
+
+        if city == self.location
+
+
+
+
+    searched_data = input("Podaj datę dla której chcesz sprawdzić pogodę. Proszę użyć formatu 'rok-miesiąc-dzień': ")
+    # if searched_data in data:
+    #     value = data[searched_data]
+    #     # print(value)
+    #     if value > 0.0:
+    #         result = "będzie padać"
+    #         print(result)
+    #     elif value == 0.0:
+    #         result = "nie będzie padać"
+    #         print(result)
+    #     else:
+    #         result = "nie mogę wskazać prognozu pogody"
+    #
+    # else:
+        response = requests.get(URL)  # Wysylamy zapytanie do API
+        print(response.json()["daily"]["rain_sum"])
+        #
+        weather_forecast_result = response.json()["daily"]["rain_sum"]
+        element_of_weather_result = weather_forecast_result[0]
+
+        if element_of_weather_result == location
+
+        if element_of_weather_result > 0.0:
+            result = "będzie padać"
+            print(result)
+        elif element_of_weather_result == 0.0:
+            result = "nie będzie padać"
+            print(result)
+        else:
+            result = "nie mogę wskazać prognozu pogody"
+        #     # Przepisac wynik do zmiennej
+        print(f"W miejscowosci {self.location} w dniu {self.date} {result}")
+
+
+
+
+    def save_to_file(self):
+        with open("new_weather_forecast2.json", mode = "w") as file_stream:
+            file = json.dumps(file_stream)
+        self.data = file
+
 
 city = input("Podaj nazwę miasta dla którego chcesz sprawdzić pogodę: ")
 weather_forecast = WeatherForecast(city, "2024-05-19") # Implementacja - clasa ma przyjac dwa stringi
