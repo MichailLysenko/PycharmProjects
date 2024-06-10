@@ -16,6 +16,12 @@ class WeatherForecast:
             get_value = self.get_value()
             data[searched_date] = value
             should_overwrite_file = True
+        result = self.is_going_to_rain(value)
+        show_result = self.print_result(city, searched_date, result)
+        if should_overwrite_file:
+            with open("new_weather_forecast2.json", mode='w') as file_stream:
+                json.dump(data, file_stream)
+
 
     def read_file(self):
         with open("new_weather_forecast2.json", mode="r") as file_stream:
@@ -66,14 +72,14 @@ class WeatherForecast:
             result = "nie mogę wskazać prognozu pogody"
         return result
 
-    def print_result(self):
+    def print_result(self, city, searched_date, result):
         print(f"W miejscowosci {city} w dniu {searched_date} {result}")
+        return print
 
     def overwrite_file(self):
         with open("new_weather_forecast2.json", mode='w') as file_stream:
-            json.dump(data, file_stream)
+            json.dump(self, file_stream)
 
 
-if should_overwrite_file:
 
 
