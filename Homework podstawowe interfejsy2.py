@@ -13,19 +13,21 @@ class WeatherForecast:
         if searched_date in data:
             value = data[searched_date]
         else:
-            get_value = self.get_value()
+            value = self.get_value(city, searched_date)
             data[searched_date] = value
             should_overwrite_file = True
         result = self.is_going_to_rain(value)
-        show_result = self.print_result(city, searched_date, result)
+        self.print_result(city, searched_date, result)
         if should_overwrite_file:
-            with open("new_weather_forecast2.json", mode='w') as file_stream:
-                json.dump(data, file_stream)
+            self.overwrite_file(data)
 
 
     def read_file(self):
         with open("new_weather_forecast2.json", mode="r") as file_stream:
-            data = json.load(file_stream)
+            try:
+                data = json.load(file_stream)
+            except Exception:
+                data = {}
         print(data)
         return data
 
@@ -35,7 +37,7 @@ class WeatherForecast:
             "Podaj datę dla której chcesz sprawdzić pogodę. Proszę użyć formatu 'rok-miesiąc-dzień': ")
         return city, searched_date
 
-    def get_value(self):
+    def get_value(self, city, searched_date):
 
             # URL do API:
             # https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&hourly=rain&daily=rain_sum&timezone=Europe%2FLondon&start_date={searched_date}&end_date={searched_date}
@@ -59,8 +61,6 @@ class WeatherForecast:
             #
             weather_forecast_result = response.json()["daily"]["rain_sum"]
             value = weather_forecast_result[0]
-            data[searched_date] = value
-            should_overwrite_file = True
             return value
 
     def is_going_to_rain(self, value):
@@ -76,9 +76,13 @@ class WeatherForecast:
         print(f"W miejscowosci {city} w dniu {searched_date} {result}")
         return print
 
-    def overwrite_file(self):
+    def overwrite_file(self, data):
         with open("new_weather_forecast2.json", mode='w') as file_stream:
-            json.dump(self, file_stream)
+            json.dump(data, file_stream)
+
+weather_forecast = WeatherForecast()
+
+weather_forecast.main()
 
 
 
