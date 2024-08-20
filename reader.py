@@ -38,5 +38,3 @@ print(file_read)
 with open ("out.csv", "w", newline='') as file_stream:
     csv_writer = csv.writer(file_stream, delimiter=",")
     csv_writer.writerows(file_read)
-
-

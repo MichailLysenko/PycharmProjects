@@ -40,8 +40,7 @@ else:
     # 3. Wysłanie zapytania
     response = requests.get(URL) # Wysylamy zapytanie do API
     print(response.json()["daily"]["rain_sum"])
-    #
-    weather_forecast_result = response.json()["daily"]["rain_sum"]
+    #ponse.json()["daily"]["rain_sum"]
     element_of_weather_result = weather_forecast_result[0]
     data[searched_date] = element_of_weather_result
 
