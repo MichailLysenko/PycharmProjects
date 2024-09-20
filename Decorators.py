@@ -47,138 +47,43 @@ class Manager:
             }
         }
         self.history = []
-        self.new_product = None
-        self.new_amount = None
-        self.new_saldo = None
-        self.product = None
         self.end_program = False
-        self.product_found = None
-
-    def main(self):
-        self.open_files()
-        self.execute_commands()
-        self.write_file()
 
     def assign(self, name):
         def decorate(cb):
             self.actions[name] = cb
+            return cb
 
         return decorate
 
     def execute(self, name):
         if name not in self.actions:
-            print("Action not defined")
+            print(f"Action '{name}' not defined")
         else:
             self.actions[name](self)
 
-    def execute_commands(self):  # Odnosi się do uruchomienia kodu
+    def execute_commands(self):
         while not self.end_program:
             self.initial_message()
-            operation = input('Podaj operacje, którą chcesz wykonać: ')
-            match operation:
-                case '1':  # SALDO
-                    amount = float(input('Podaj kwotę, którą chcesz dodać lub ująć z konta. Jeżeli chcesz ujmować, proszę podaj kwotę ujemną: '))
-                    self.saldo += amount
-                    print(f"Konto zmieniono o kwotę {amount}, stan konta wynosi {self.saldo}")
-                    self.history.append(f'Wykonano instrukcję saldo, zasilono lub ujęto {amount}')
-                    print(self.history)
-                    self.write_file()
+            operation = input('Podaj operację, którą chcesz wykonać: ')
+            self.execute(operation)
 
-                case '2':  # SPRZEDAŻ
-                    print(self.magazyn)
-                    self.product = str(input('Podaj nazwę produktu: '))
-                    amount = int(input('Podaj ilość produktów: '))
-                    self.product_found = False
-
-                    for item, item_details in self.magazyn.items():
-                        if self.product == item:
-                            if item_details['ilosc'] >= amount:
-                                item_details['ilosc'] -= amount
-                                self.saldo += (item_details['cena'] * amount)
-                                self.product_found = True
-                                self.history.append(f'Sprzedano {self.product} w ilości {amount}')
-                                print(f'Sprzedano {self.product} w ilości {amount}')
-                            else:
-                                print(f'Nie udało się sprzedać towaru {self.product}, mamy go za mało na magazynie')
-                            break
-
-                    if not self.product_found:
-                        self.history.append(f'Nie udało się sprzedać towaru {self.product}, mamy go za mało na magazynie lub nie mamy wcale')
-
-                case '3':  # ZAKUP
-                    print(self.magazyn)
-                    self.product = str(input('Podaj nazwę produktu: '))
-                    amount = int(input('Podaj ilość produktów: '))
-                    price = float(input('Podaj cenę produktu: '))
-                    self.product_found = False
-
-                    for item, item_details in self.magazyn.items():
-                        if self.product == item:
-                            if self.saldo >= item_details['cena'] * amount:
-                                item_details['ilosc'] += amount
-                                self.saldo -= item_details['cena'] * amount
-                                self.product_found = True
-                                self.history.append(f'Zakupiono {self.product} w ilości {amount}')
-                                print(f'Zakupiono {self.product} w ilości {amount}')
-                            else:
-                                print("Niestety nie stać Cię na zakup tego produktu")
-                            break
-
-                    if not self.product_found:
-                        self.new_product = input(
-                            'Jeszcze nie mamy takiego produktu na magazynie.\nProszę ponownie podać nazwę produktu - zostanie on wpisany do naszej bazy danych: ')
-                        self.new_amount = int(input('Proszę podać ilość produktu: '))
-                        price_to_pay = price * self.new_amount
-
-                        if self.saldo - price_to_pay >= 0:
-                            print(f'Zakupiono {self.new_product} w ilości {self.new_amount} sztuk')
-                            self.magazyn[self.new_product] = {'ilosc': self.new_amount, 'cena': price}
-                            self.saldo -= price_to_pay
-                            self.history.append(f'Zakupiono {self.new_product} w ilości {self.new_amount} sztuk')
-                        else:
-                            print("Niestety nie stać Cię na zakup tego produktu")
-
-                case '4':  # KONTO
-                    print(f"Stan konta wynosi: {self.saldo}")
-
-                case '5':  # LISTA
-                    print("Stan magazynu:")
-                    for product, details in self.magazyn.items():
-                        print(f"{product}: ilość = {details['ilosc']}, cena = {details['cena']}")
-
-                case '6':  # MAGAZYN
-                    searched_product = str(input("Proszę podać nazwę produktu: "))
-                    if self.magazyn.get(searched_product):
-                        print(f"W magazynie znaleziono {searched_product}")
-                        self.history.append(f'Znaleziono {searched_product}')
-                    else:
-                        print(f"Nie znaleziono {searched_product}")
-                        self.history.append(f'Nie znaleziono {searched_product}')
-                        with open("magazyn.txt", mode="w") as file_stream:
-                            file_stream.writelines(f"W magazynie nie znaleziono {searched_product}\n")
-
-                case '7':  # PRZEGLĄD
-                    value_from = input('Podaj początkowy zakres: ')
-                    value_to = input('Podaj końcowy zakres: ')
-                    if not value_from and not value_to:
-                        print(self.history)
-                    elif value_from and not value_to:
-                        print(self.history[int(value_from):])
-                    elif value_from and value_to:
-                        print(self.history[int(value_from):int(value_to)])
-
-                case '8':  # ZAKOŃCZ PROGRAM
-                    self.end_program = True
-                    print("Zakończenie programu")
+    def initial_message(self):
+        message = (
+            "Witaj w Twoim magazynie. Lista dostępnych komend to:\n"
+            " 1. Saldo\n 2. Sprzedaż\n 3. Zakup\n 4. Konto\n"
+            " 5. Lista\n 6. Magazyn\n 7. Przegląd\n 8. Koniec"
+        )
+        print(message)
 
     def open_files(self):
         try:
             with open("saldo.txt", encoding="utf-8") as file_stream:
-                written_text_first = file_stream.read()
-                print(written_text_first)
+                saldo_text = file_stream.read()
+                print(saldo_text)
             with open("Magazyn.txt", encoding="utf-8") as file_stream:
-                written_text_second = file_stream.read()
-                print(written_text_second)
+                magazyn_text = file_stream.read()
+                print(magazyn_text)
         except FileNotFoundError:
             print("Brak plików saldo.txt lub Magazyn.txt")
         except UnicodeDecodeError as e:
@@ -186,21 +91,111 @@ class Manager:
 
     def write_file(self):
         with open("saldo.txt", mode="w") as file_stream:
-            file_stream.writelines(str(self.saldo) + "\n")
+            file_stream.write(str(self.saldo) + "\n")
         with open("Magazyn.txt", mode="w") as file_stream:
-            file_stream.writelines(str(self.magazyn) + "\n")
+            file_stream.write(str(self.magazyn) + "\n")
 
-def initial_message(self):
-    message = 'Witaj w Twoim magazynie. Lista dostępnych komend to:\n' \
-                ' 1. Saldo\n 2. Sprzedaż\n 3. Zakup\n 4. Konto\n 5. Lista\n 6. Magazyn\n 7. Przegląd\n 8. Koniec'
-    print(message)
-    return message
 
-# Magazyn to jest lista słowników
-# Magazyn_1 to jest słownik z klucza (nazwa) słowników
-
+# Aktionen als dekorierte Funktionen
 manager = Manager()
-manager.initial_message
+
+
+@manager.assign('1')
+def saldo(manager):
+    amount = float(input('Podaj kwotę, którą chcesz dodać lub ująć z konta. '
+                         'Jeżeli chcesz ujmować, proszę podaj kwotę ujemną: '))
+    manager.saldo += amount
+    print(f"Konto zmieniono o kwotę {amount}, stan konta wynosi {manager.saldo}")
+    manager.history.append(f'Wykonano instrukcję saldo, zasilono lub ujęto {amount}')
+    manager.write_file()
+
+
+@manager.assign('2')
+def sprzedaz(manager):
+    print(manager.magazyn)
+    product = input('Podaj nazwę produktu: ')
+    amount = int(input('Podaj ilość produktów: '))
+
+    if product in manager.magazyn and manager.magazyn[product]['ilosc'] >= amount:
+        manager.magazyn[product]['ilosc'] -= amount
+        manager.saldo += manager.magazyn[product]['cena'] * amount
+        manager.history.append(f'Sprzedano {product} w ilości {amount}')
+        print(f'Sprzedano {product} w ilości {amount}')
+    else:
+        print(f'Nie udało się sprzedać towaru {product}, mamy go za mało na magazynie')
+
+
+@manager.assign('3')
+def zakup(manager):
+    print(manager.magazyn)
+    product = input('Podaj nazwę produktu: ')
+    amount = int(input('Podaj ilość produktów: '))
+    price = float(input('Podaj cenę produktu: '))
+
+    if product in manager.magazyn:
+        total_cost = price * amount
+        if manager.saldo >= total_cost:
+            manager.magazyn[product]['ilosc'] += amount
+            manager.saldo -= total_cost
+            manager.history.append(f'Zakupiono {product} w ilości {amount}')
+            print(f'Zakupiono {product} w ilości {amount}')
+        else:
+            print("Niestety nie stać Cię na zakup tego produktu")
+    else:
+        total_cost = price * amount
+        if manager.saldo >= total_cost:
+            manager.magazyn[product] = {'ilosc': amount, 'cena': price}
+            manager.saldo -= total_cost
+            manager.history.append(f'Zakupiono nowy produkt {product} w ilości {amount}')
+            print(f'Zakupiono nowy produkt {product} w ilości {amount}')
+        else:
+            print("Niestety nie stać Cię na zakup tego nowego produktu")
+
+
+@manager.assign('4')
+def konto(manager):
+    print(f"Stan konta wynosi: {manager.saldo}")
+
+
+@manager.assign('5')
+def lista(manager):
+    print("Stan magazynu:")
+    for product, details in manager.magazyn.items():
+        print(f"{product}: ilość = {details['ilosc']}, cena = {details['cena']}")
+
+
+@manager.assign('6')
+def magazyn(manager):
+    searched_product = input("Proszę podać nazwę produktu: ")
+    if searched_product in manager.magazyn:
+        print(f"W magazynie znaleziono {searched_product}")
+        manager.history.append(f'Znaleziono {searched_product}')
+    else:
+        print(f"Nie znaleziono {searched_product}")
+        manager.history.append(f'Nie znaleziono {searched_product}')
+
+
+@manager.assign('7')
+def przeglad(manager):
+    value_from = input('Podaj początkowy zakres: ')
+    value_to = input('Podaj końcowy zakres: ')
+
+    if not value_from and not value_to:
+        print(manager.history)
+    elif value_from and not value_to:
+        print(manager.history[int(value_from):])
+    elif value_from and value_to:
+        print(manager.history[int(value_from):int(value_to)])
+
+
+@manager.assign('8')
+def koniec(manager):
+    manager.end_program = True
+    print("Zakończenie programu")
+
+
+# Manager - wywolanie
+manager.execute_commands()
 
 
 
