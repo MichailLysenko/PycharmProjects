@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Historia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Historia</h1>
+
+    <div class="history">
+        <ul>
+            {% for wpis in historia %}
+            <li>{{ wpis }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="navigation">
+        <a href="{{ url_for('index') }}">Powrót do Strony Głównej</a>
+    </div>
+</body>
+</html>
