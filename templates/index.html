@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Magazyn i Księgowość</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Strona Główna</h1>
+    <div class="status">
+        <p><strong>Aktualne saldo:</strong> {{ saldo }} zł</p>
+    </div>
+
+    <div class="magazyn">
+        <h2>Stan Magazynu</h2>
+        <table>
+            <tr>
+                <th>Produkt</th>
+                <th>Ilość</th>
+                <th>Cena Jednostkowa (zł)</th>
+            </tr>
+            {% for produkt, dane in magazyn.items() %}
+            <tr>
+                <td>{{ produkt }}</td>
+                <td>{{ dane.ilosc }}</td>
+                <td>{{ dane.cena }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="forms">
+        <h2>Formularze</h2>
+
+        <!-- Formularz Zakupu -->
+        <form method="POST">
+            <input type="hidden" name="form_type" value="zakup">
+            <h3>Zakup</h3>
+            <label>Produkt:</label><br>
+            <input type="text" name="produkt" required><br>
+            <label>Cena Jednostkowa (zł):</label><br>
+            <input type="number" step="0.01" name="cena" required><br>
+            <label>Ilość:</label><br>
+            <input type="number" name="ilosc" required><br>
+            <button type="submit">Zakup</button>
+        </form>
+
+        <!-- Formularz Sprzedaży -->
+        <form method="POST">
+            <input type="hidden" name="form_type" value="sprzedaz">
+            <h3>Sprzedaż</h3>
+            <label>Produkt:</label><br>
+            <input type="text" name="produkt" required><br>
+            <label>Cena Jednostkowa (zł):</label><br>
+            <input type="number" step="0.01" name="cena" required><br>
+            <label>Ilość:</label><br>
+            <input type="number" name="ilosc" required><br>
+            <button type="submit">Sprzedaj</button>
+        </form>
+
+        <!-- Formularz Zmiany Salda -->
+        <form method="POST">
+            <input type="hidden" name="form_type" value="saldo">
+            <h3>Zmiana Salda</h3>
+            <label>Komentarz:</label><br>
+            <input type="text" name="komentarz" required><br>
+            <label>Wartość (zł):</label><br>
+            <input type="number" step="0.01" name="wartosc" required><br>
+            <button type="submit">Zmień Saldo</button>
+        </form>
+    </div>
+
+    <div class="navigation">
+        <a href="{{ url_for('historia_view') }}">Historia</a>
+    </div>
+</body>
+</html>
