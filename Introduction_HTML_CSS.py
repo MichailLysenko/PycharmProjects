@@ -1,32 +1,3 @@
-# Rozbuduj program do zarządzania firmą.
-# Wszystkie funkcjonalności (komendy, zapisywanie i czytanie przy użyciu pliku itp.) pozostają bez zmian.
-# Stwórz clasę Manager, która będzie implementowała dwie kluczowe metody - execute i assign.
-# Przy ich użyciu wywołuj poszczególne fragmenty aplikacji.
-# Metody execute i assign powinny zostać zaimplementowane zgodnie z przykładami z materiałów do zajęć.
-#
-# Niedozwolone są żadne zmienne globalne, wszystkie dane powinny być przechowywane wewnątrz obiektu Manager.
-# 1
-# Postep refaktoryzacji:
-# Przejzenie kodu i podzial jego struktury wzgledem dalszego grupowania w bloki - refaktoryzacja
-# Dopasowanie blokow wzgledem ich funkcjonalnosci do metod execute i assign.
-# Umozliwienie dzialania kodu.
-# 2
-# Podział na bloki:
-# ' 1. Saldo\n 2. Sprzedaz\n 3. Zakup\n 4. Konto\n 5. Lista\n 6. Magazyn\n 7. Przeglad\n 8. Koniec'
-# Manager - stale wartosci - Saldo, magazyn, historia
-# Execute - zakup (czynnosc), przeglad
-# Assign - przypisanie czynnosci do komend
-
-# PROBLEMY[8]:
-# 1. Błędne odwołanie do zmiennej end_program v
-# 2. Błędne odwołanie do zmiennej saldo  v
-# 3. Problem z pętlą while i brakiem case w bloku if
-# 4. Brak obsługi zakończenia programu  v
-# 5. Błędne użycie metod statycznych i self  v
-# 6. Poprawne wywołanie main i instancji klasy
-# 7. Poprawienie logicznych błędów
-# 8. Pętla w metodzie execute_commands
-# Problemy rozwiązane
 
 class Manager:
 
@@ -198,18 +169,78 @@ def koniec(manager):
 # Manager - wywolanie
 manager.execute_commands()
 
+# Zadanie polega na zaprojektowaniu strony głównej dla aplikacji
+# do zarządzania magazynem i księgowością oraz podstrony "Historia".
+#
+# 1.Strona główna powinna zawierać następujące elementy:
+#
+# Wyświetlanie aktualnego stanu magazynowego i aktualnego salda.
+# Trzy formularze:
+# a. Formularz do zakupu: z polami: nazwa produktu, cena jednostkowa, liczba sztuk.
+# b. Formularz do sprzedaży: z polami: nazwa produktu, cena jednostkowa, liczba sztuk.
+# c. Formularz zmiany salda: z polami: komentarz, wartość (tylko liczbowa).
+#
+# 2.Podstrona "Historia"
+#
+# Podstrona powinna być dostępna pod adresem "/historia/" i "/historia/<line_from>/<line_to>/"
+# Jeśli nie podano parametrów, powinna wyświetlać całą historię.
+# Jeśli podano parametry, powinna wyświetlać dane z danego zakresu.
+#
+# 3.CSS
+#
+# Zapewnij przyjazny dla użytkownika interfejs, stosując style CSS.
 
+<!DOCTYPE html>
 
+<head>
 
+<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
 
+</head>
 
+<img src="sciezka-do-plliku.jpg" />
+<h1>Treść nagłówka</h1>
+<h2>Treść nagłówka</h2>
+<h3>Treść nagłówka</h3>
+<h4>Treść nagłówka</h4>
+<h5>Treść nagłówka</h5>
+<h6>Treść nagłówka</h6>
 
+<p>Paragraf teksu</p>
 
+<div id="pierwszy-element" class="klasa-1 klasa-2 klasa-3"></div>
 
+< form
+method = "METODA"
+action = "ADRES" > ...
+Zawartość
+formularza... < / form >
 
+# Pole tekstowe - jedna linia:
 
+<input type="text" name="nazwa pola" value="wartosc domyslna" />
 
+# Pole tekstowe - tylko numery:
 
+<input type="number" name="nazwa pola" value="wartosc domyslna" />
 
+# Pole typu checkbox:
 
+<input type="checkbox" name="nazwa pola" />
+
+# Jeśli chcecie, żeby pole było domyślnie zaznaczone:
+
+<input type="checkbox" checked="checked" name="nazwa pola" />
+
+# Jeśli chcecie przekazać wartość niewidoczną dla użytkownika:
+
+<input type="hidden" name="nazwa pola" value="wartosc pola" />
+
+# Przycisk do wysłania formularza:
+
+<input type="submit" value="Etykieta przycisku" />
+# lub
+<button type="submit">Etykieta Pola</button>
 
