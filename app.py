@@ -1,5 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import os
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+app = Flask(__name__)
+
+# Konfiguracja bazy danych (SQLite for development)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///firma.db'  # SQLite
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Inicjalizacja bazy danych i migracji
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+db.init_app(app)
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
@@ -30,6 +43,23 @@ class Manager:
             with open("magazyn.txt", mode="r") as file_stream:
                 self.magazyn = eval(file_stream.read().strip())
 
+# Model dla stanu konta
+class Konto(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    saldo = db.Column(db.Float, nullable=False, default=8000.0)
+
+# Model dla produktów w magazynie
+class Magazyn(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nazwa = db.Column(db.String(100), nullable=False)
+    ilosc = db.Column(db.Integer, nullable=False)
+    cena = db.Column(db.Float, nullable=False)
+
+# Model dla historii operacji
+class Historia(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    opis = db.Column(db.String(255), nullable=False)
+    data = db.Column(db.DateTime, default=db.func.now())
 
 manager = Manager()
 
@@ -42,48 +72,60 @@ def index():
 
 @app.route('/zakup', methods=['POST'])
 def zakup():
-    nazwa_produktu = request.form['nazwa']
+    nazwa = request.form['nazwa']
     cena = float(request.form['cena'])
     ilosc = int(request.form['ilosc'])
 
-    total_cost = cena * ilosc
+    # Sprawdzenie, czy produkt już istnieje w magazynie
+    produkt = Magazyn.query.filter_by(nazwa=nazwa).first()
+    konto = Konto.query.first()
 
-    if nazwa_produktu in manager.magazyn:
-        if manager.saldo >= total_cost:
-            manager.magazyn[nazwa_produktu]['ilosc'] += ilosc
-            manager.saldo -= total_cost
-            manager.history.append(f'Zakupiono {ilosc} szt. {nazwa_produktu}')
-            flash(f'Zakupiono {ilosc} szt. {nazwa_produktu}')
+    koszt = cena * ilosc
+    if konto.saldo >= koszt:
+        if produkt:
+            produkt.ilosc += ilosc
+            produkt.cena = cena  # Możemy zaktualizować cenę
         else:
-            flash('Nie wystarczająca ilość środków na zakup.')
+            nowy_produkt = Magazyn(nazwa=nazwa, ilosc=ilosc, cena=cena)
+            db.session.add(nowy_produkt)
+
+        konto.saldo -= koszt
+
+        # Dodanie do historii
+        historia = Historia(opis=f"Zakupiono {ilosc} sztuk {nazwa} za {koszt} PLN")
+        db.session.add(historia)
+
+        db.session.commit()
+        flash('Zakup zakończony pomyślnie!')
     else:
-        if manager.saldo >= total_cost:
-            manager.magazyn[nazwa_produktu] = {'ilosc': ilosc, 'cena': cena}
-            manager.saldo -= total_cost
-            manager.history.append(f'Zakupiono nowy produkt: {ilosc} szt. {nazwa_produktu}')
-            flash(f'Zakupiono nowy produkt: {ilosc} szt. {nazwa_produktu}')
-        else:
-            flash('Nie wystarczająca ilość środków na zakup nowego produktu.')
+        flash('Brak wystarczających środków na koncie.')
 
-    manager.zapisz_do_pliku()
-    return redirect(url_for('index'))
+    return redirect('/')
 
 
 @app.route('/sprzedaz', methods=['POST'])
 def sprzedaz():
-    nazwa_produktu = request.form['nazwa']
+    nazwa = request.form['nazwa']
     ilosc = int(request.form['ilosc'])
 
-    if nazwa_produktu in manager.magazyn and manager.magazyn[nazwa_produktu]['ilosc'] >= ilosc:
-        manager.magazyn[nazwa_produktu]['ilosc'] -= ilosc
-        manager.saldo += manager.magazyn[nazwa_produktu]['cena'] * ilosc
-        manager.history.append(f'Sprzedano {ilosc} szt. {nazwa_produktu}')
-        flash(f'Sprzedano {ilosc} szt. {nazwa_produktu}')
-    else:
-        flash(f'Nie można sprzedać {nazwa_produktu}, niewystarczająca ilość w magazynie.')
+    produkt = Magazyn.query.filter_by(nazwa=nazwa).first()
+    konto = Konto.query.first()
 
-    manager.zapisz_do_pliku()
-    return redirect(url_for('index'))
+    if produkt and produkt.ilosc >= ilosc:
+        dochod = produkt.cena * ilosc
+        produkt.ilosc -= ilosc
+        konto.saldo += dochod
+
+        # Dodanie do historii
+        historia = Historia(opis=f"Sprzedano {ilosc} sztuk {nazwa} za {dochod} PLN")
+        db.session.add(historia)
+
+        db.session.commit()
+        flash('Sprzedaż zakończona pomyślnie!')
+    else:
+        flash('Brak wystarczającej ilości towaru na magazynie.')
+
+    return redirect('/')
 
 
 @app.route('/zmiana_salda', methods=['POST'])
@@ -108,6 +150,27 @@ def historia(start=None, end=None):
         flash(f'Nieprawidłowy zakres. Zakres dostępnych operacji: 0 - {len(manager.history) - 1}')
         return redirect(url_for('historia'))
 
+
+@app.route('/sprawdz_integralnosc')
+def sprawdz_integralnosc():
+    konto = Konto.query.first()
+    operacje = Historia.query.all()
+
+    saldo_obliczone = 8000.0  # Zakładamy początkowe saldo
+    for operacja in operacje:
+        if "Zakupiono" in operacja.opis:
+            # Odczytanie wartości zakupu z historii
+            kwota = float(operacja.opis.split()[-2])
+            saldo_obliczone -= kwota
+        elif "Sprzedano" in operacja.opis:
+            # Odczytanie wartości sprzedaży
+            kwota = float(operacja.opis.split()[-2])
+            saldo_obliczone += kwota
+
+    if saldo_obliczone == konto.saldo:
+        return "Dane są zgodne"
+    else:
+        return f"Nieprawidłowe dane! Obliczone saldo: {saldo_obliczone}, Saldo w bazie: {konto.saldo}"
 
 if __name__ == '__main__':
     app.run(debug=True)

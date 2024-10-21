@@ -22,6 +22,6 @@ while True: # main game loop
 
   pygame.display.update()
 
-# import pygame
-#
-# print (pygame.ver)
+
+
+
