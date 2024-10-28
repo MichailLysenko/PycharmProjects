@@ -4,7 +4,7 @@ from pygame.locals import *
 pygame.init()
 
 FPS = 30 # frames per second setting
-# fpsClock = pygame.time.Clock()
+fpsClock = pygame.time.Clock()  # Initialize the clock object
 
 # set up the window
 DISPLAYSURF = pygame.display.set_mode((400, 300), 0, 32)
@@ -44,5 +44,4 @@ while True: # the main game loop
             sys.exit()
 
     pygame.display.update()
-    fpsClock.tick(FPS)
-
+    #fpsClock.tick(FPS)  # Use the clock to limit the frame rate

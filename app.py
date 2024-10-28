@@ -12,9 +12,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Inicjalizacja bazy danych i migracji
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-db.init_app(app)
+#db.init_app(app)
 
-app = Flask(__name__)
+#app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 
@@ -173,4 +173,10 @@ def sprawdz_integralnosc():
         return f"Nieprawidłowe dane! Obliczone saldo: {saldo_obliczone}, Saldo w bazie: {konto.saldo}"
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
+
+    # db.create_all()
+    # db.Models
+    # db.create_all()
